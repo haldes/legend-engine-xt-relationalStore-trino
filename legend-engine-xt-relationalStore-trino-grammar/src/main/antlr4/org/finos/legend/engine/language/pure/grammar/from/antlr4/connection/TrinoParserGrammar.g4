@@ -14,7 +14,9 @@ trinoDatasourceSpecification:               TRINO
                                                     (
                                                         trinoHost
                                                         | trinoPort
-                                                        | trinoSSL
+                                                        //| trinoSSL
+                                                        | trinoTrustStorePathVaultReference
+                                                        | trinoTustStorePasswordVaultReference
                                                         | trinoKerberosUseCanonicalHostname
                                                         | trinoClientTags
                                                     )*
@@ -39,7 +41,7 @@ trinoTrustStorePathVaultReference:          TRUST_STORE_PATH_VAULT_REFERENCE COL
 trinoTustStorePasswordVaultReference:       TRUST_STORE_PASSWORD_VAULT_REFERENCE COLON STRING SEMI_COLON
 ;
 
-sslField:                                   BRACE_OPEN
+/*sslField:                                   BRACE_OPEN
                                                 (
                                                 trinoTrustStorePathVaultReference
                                                 | trinoTustStorePasswordVaultReference
@@ -48,6 +50,6 @@ sslField:                                   BRACE_OPEN
 ;
 
 trinoSSL:                                   SSL COLON sslField SEMI_COLON
-;
+;*/
 
 

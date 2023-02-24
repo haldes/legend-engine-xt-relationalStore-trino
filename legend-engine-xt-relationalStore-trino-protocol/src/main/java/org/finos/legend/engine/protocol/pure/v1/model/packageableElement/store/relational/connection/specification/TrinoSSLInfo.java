@@ -14,23 +14,19 @@
 
 package org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.relational.connection.specification;
 
-public class TrinoDatasourceSpecification
-        extends DatasourceSpecification
+public class TrinoSSLInfo
 {
-    public String host;
-    public int port;
-    //public TrinoSSLInfo ssl;
-
     public String trustStorePathVaultReference;
-    public String tustStorePasswordVaultReference;
+    public String trustStorePasswordVaultReference;
 
-
-    public String clientTags;
-    public boolean kerberosUseCanonicalHostname;
-
-    @Override
-    public <T> T accept(DatasourceSpecificationVisitor<T> datasourceSpecificationVisitor)
+    public TrinoSSLInfo()
     {
-        return datasourceSpecificationVisitor.visit(this);
+        super();
+    }
+
+    public TrinoSSLInfo(String trustStorePathVaultReference, String trustStorePasswordVaultReference)
+    {
+        this.trustStorePathVaultReference = trustStorePathVaultReference;
+        this.trustStorePasswordVaultReference = trustStorePasswordVaultReference;
     }
 }

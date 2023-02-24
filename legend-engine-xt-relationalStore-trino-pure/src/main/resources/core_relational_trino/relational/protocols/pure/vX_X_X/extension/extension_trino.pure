@@ -20,12 +20,32 @@ meta::protocols::pure::vX_X_X::transformation::fromPureGraph::connection::trinoS
     transfers_connection_transformAuthenticationStrategy = [
     ],
     transfers_connection_transformDatasourceSpecification = [
+    s:meta::pure::alloy::connections::alloy::specification::TrinoDatasourceSpecification[1] |
+                     ^meta::protocols::pure::vX_X_X::metamodel::store::relational::connection::alloy::specification::TrinoDatasourceSpecification(
+                        _type = 'Trino',
+                        host = $s.host,
+                        port = $s.port,
+                        trustStorePathVaultReference = $s.trustStorePathVaultReference,
+                        trustStorePasswordVaultReference = $s.trustStorePasswordVaultReference,
+                        clientTags = $s.clientTags,
+                        kerberosUseCanonicalHostname = $s.kerberosUseCanonicalHostname
+                     )
     ],
     reverse_transfers_typeLookups = [
+     pair('Trino', 'TrinoDatasourceSpecification')
     ],
     reverse_transfers_connection_transformAuthenticationStrategy = [
     ],
     reverse_transfers_connection_transformDatasourceSpecification = [
+    s:meta::protocols::pure::vX_X_X::metamodel::store::relational::connection::alloy::specification::TrinoDatasourceSpecification[1] |
+                     ^meta::pure::alloy::connections::alloy::specification::TrinoDatasourceSpecification(
+                        host = $s.host,
+                        port = $s.port,
+                        trustStorePathVaultReference = $s.trustStorePathVaultReference,
+                        trustStorePasswordVaultReference = $s.trustStorePasswordVaultReference,
+                        clientTags = $s.clientTags,
+                        kerberosUseCanonicalHostname = $s.kerberosUseCanonicalHostname
+                     )
     ]
   )
 }
