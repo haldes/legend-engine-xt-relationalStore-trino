@@ -32,7 +32,8 @@ public class TrinoManager extends DatabaseManager
     @Override
     public String buildURL(String host, int port, String databaseName, Properties extraUserDataSourceProperties, AuthenticationStrategy authenticationStrategy)
     {
-        throw new UnsupportedOperationException("not yet implemented");
+        String hostWithPort = host + ":" + port;
+        return "jdbc:trino://" + hostWithPort + "/";
     }
 
     @Override

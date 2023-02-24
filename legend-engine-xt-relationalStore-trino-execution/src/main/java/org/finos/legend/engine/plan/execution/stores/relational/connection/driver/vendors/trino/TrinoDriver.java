@@ -18,11 +18,12 @@ import org.finos.legend.engine.plan.execution.stores.relational.connection.drive
 
 public class TrinoDriver extends DriverWrapper
 {
-    public static String DRIVER_CLASSNAME = "<driver-classname>";
+    public static String DRIVER_CLASSNAME = "io.trino.jdbc.TrinoDriver";
 
     @Override
     protected String getClassName()
     {
         return DRIVER_CLASSNAME;
     }
+
 }

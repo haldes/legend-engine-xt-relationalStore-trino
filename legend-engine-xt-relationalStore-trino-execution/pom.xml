@@ -51,5 +51,14 @@
             <artifactId>eclipse-collections</artifactId>
         </dependency>
         <!-- ECLIPSE COLLECTIONS -->
+
+        <!-- https://mvnrepository.com/artifact/io.trino/trino-jdbc -->
+        <dependency>
+            <groupId>io.trino</groupId>
+            <artifactId>trino-jdbc</artifactId>
+            <version>393</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 </project>
