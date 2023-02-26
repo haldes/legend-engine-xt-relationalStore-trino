@@ -18,20 +18,40 @@ import org.eclipse.collections.api.block.function.Function2;
 import org.eclipse.collections.impl.factory.Lists;
 import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.relational.connection.authentication.AuthenticationStrategy;
 import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.relational.connection.specification.DatasourceSpecification;
+import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.relational.connection.specification.TrinoDatasourceSpecification;
 
 import java.util.List;
 
+import static org.finos.legend.engine.language.pure.grammar.to.PureGrammarComposerUtility.getTabString;
+
 public class TrinoGrammarComposerExtension implements IRelationalGrammarComposerExtension
 {
-    @Override
-    public List<Function2<AuthenticationStrategy, PureGrammarComposerContext, String>> getExtraAuthenticationStrategyComposers()
-    {
-        return Lists.mutable.with((_strategy, context) -> null);
-    }
+//    @Override
+//    public List<Function2<AuthenticationStrategy, PureGrammarComposerContext, String>> getExtraAuthenticationStrategyComposers()
+//    {
+//        return Lists.mutable.with((_strategy, context) -> null);
+//    }
 
     @Override
     public List<Function2<DatasourceSpecification, PureGrammarComposerContext, String>> getExtraDataSourceSpecificationComposers()
     {
-        return Lists.mutable.with((_spec, context) -> null);
+        return Lists.mutable.with((_spec, context) ->
+        {
+            if (_spec instanceof TrinoDatasourceSpecification)
+            {
+                TrinoDatasourceSpecification spec = (TrinoDatasourceSpecification) _spec;
+                int baseIndentation = 1;
+                return "Trino\n" +
+                        context.getIndentationString() + getTabString(baseIndentation) + "{\n" +
+                        context.getIndentationString() + getTabString(baseIndentation + 1) + "host: " + PureGrammarComposerUtility.convertString(spec.host,true) + ";\n" +
+                        context.getIndentationString() + getTabString(baseIndentation + 1) + "port: " + spec.port + ";\n" +
+                        context.getIndentationString() + getTabString(baseIndentation + 1) + "trustStorePathVaultReference: " + PureGrammarComposerUtility.convertString(spec.trustStorePathVaultReference,true) + ";\n" +
+                        context.getIndentationString() + getTabString(baseIndentation + 1) + "trustStorePasswordVaultReference: " + PureGrammarComposerUtility.convertString(spec.trustStorePasswordVaultReference,true) + ";\n" +
+                        context.getIndentationString() + getTabString(baseIndentation + 1) + "clientTags: " + PureGrammarComposerUtility.convertString(spec.clientTags,true) + ";\n" +
+                        context.getIndentationString() + getTabString(baseIndentation + 1) + "kerberosUseCanonicalHostname: " + spec.kerberosUseCanonicalHostname + ";\n" +
+                        context.getIndentationString() + getTabString(baseIndentation) + "}";
+            }
+            return null;
+        });
     }
 }

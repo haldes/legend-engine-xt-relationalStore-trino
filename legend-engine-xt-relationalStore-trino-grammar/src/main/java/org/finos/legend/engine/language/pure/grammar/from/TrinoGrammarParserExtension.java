@@ -16,7 +16,9 @@ package org.finos.legend.engine.language.pure.grammar.from;
 
 import org.finos.legend.engine.language.pure.grammar.from.antlr4.connection.TrinoLexerGrammar;
 import org.finos.legend.engine.language.pure.grammar.from.antlr4.connection.TrinoParserGrammar;
+import org.finos.legend.engine.language.pure.grammar.from.authentication.AuthenticationStrategySourceCode;
 import org.finos.legend.engine.language.pure.grammar.from.datasource.DataSourceSpecificationSourceCode;
+import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.relational.connection.authentication.AuthenticationStrategy;
 import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.relational.connection.specification.DatasourceSpecification;
 import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.relational.connection.specification.TrinoDatasourceSpecification;
 
@@ -24,12 +26,22 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-public class TrinoGrammarParserExtension implements IRelationalGrammarParserExtension {
+public class TrinoGrammarParserExtension implements IRelationalGrammarParserExtension
+{
+
+//    @Override
+//    public List<Function<AuthenticationStrategySourceCode, AuthenticationStrategy>> getExtraAuthenticationStrategyParsers()
+//    {
+//        return Collections.singletonList(code -> null);
+//    }
+
     @Override
-    public List<Function<DataSourceSpecificationSourceCode, DatasourceSpecification>> getExtraDataSourceSpecificationParsers() {
+    public List<Function<DataSourceSpecificationSourceCode, DatasourceSpecification>> getExtraDataSourceSpecificationParsers()
+    {
         return Collections.singletonList(code ->
         {
-            if ("Trino".equals(code.getType())) {
+            if ("Trino".equals(code.getType()))
+            {
                 return IRelationalGrammarParserExtension.parse(code, TrinoLexerGrammar::new, TrinoParserGrammar::new,
                         p -> visitTrinoDsp(code, p.trinoDatasourceSpecification()));
             }
@@ -37,7 +49,8 @@ public class TrinoGrammarParserExtension implements IRelationalGrammarParserExte
         });
     }
 
-    private TrinoDatasourceSpecification visitTrinoDsp(DataSourceSpecificationSourceCode code, TrinoParserGrammar.TrinoDatasourceSpecificationContext dbSpecCtx) {
+    private TrinoDatasourceSpecification visitTrinoDsp(DataSourceSpecificationSourceCode code, TrinoParserGrammar.TrinoDatasourceSpecificationContext dbSpecCtx)
+    {
         TrinoDatasourceSpecification dsSpec = new TrinoDatasourceSpecification();
         dsSpec.sourceInformation = code.getSourceInformation();
         // host
@@ -50,8 +63,8 @@ public class TrinoGrammarParserExtension implements IRelationalGrammarParserExte
         TrinoParserGrammar.TrinoTrustStorePathVaultReferenceContext pathVaultCtx = PureGrammarParserUtility.validateAndExtractRequiredField(dbSpecCtx.trinoTrustStorePathVaultReference(), "trustStorePathVaultReference", dsSpec.sourceInformation);
         dsSpec.trustStorePathVaultReference = PureGrammarParserUtility.fromGrammarString(pathVaultCtx.STRING().getText(), true);
 
-        TrinoParserGrammar.TrinoTustStorePasswordVaultReferenceContext passwordCtx = PureGrammarParserUtility.validateAndExtractRequiredField(dbSpecCtx.trinoTustStorePasswordVaultReference(), "trustStorePasswordVaultReference", dsSpec.sourceInformation);
-        dsSpec.trustStorePathVaultReference = PureGrammarParserUtility.fromGrammarString(passwordCtx.STRING().getText(), true);
+        TrinoParserGrammar.TrinoTrustStorePasswordVaultReferenceContext passwordCtx = PureGrammarParserUtility.validateAndExtractRequiredField(dbSpecCtx.trinoTrustStorePasswordVaultReference(), "trustStorePasswordVaultReference", dsSpec.sourceInformation);
+        dsSpec.trustStorePasswordVaultReference = PureGrammarParserUtility.fromGrammarString(passwordCtx.STRING().getText(), true);
 
         TrinoParserGrammar.TrinoClientTagsContext ClientTagCtx = PureGrammarParserUtility.validateAndExtractRequiredField(dbSpecCtx.trinoClientTags(), "clientTags", dsSpec.sourceInformation);
         dsSpec.clientTags = PureGrammarParserUtility.fromGrammarString(ClientTagCtx.STRING().getText(), true);

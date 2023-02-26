@@ -34,11 +34,11 @@ public class TrinoProtocolExtension implements PureProtocolExtension
             //DatasourceSpecification
             ProtocolSubTypeInfo.newBuilder(DatasourceSpecification.class)
                     .withSubtype(TrinoDatasourceSpecification.class, "TrinoSpecification")
-                .build(),
-            // AuthenticationStrategy
-            ProtocolSubTypeInfo.newBuilder(AuthenticationStrategy.class)
-                    .withSubtype(DelegatedKerberosAuthenticationStrategy.class, "delegatedKerberosAuth")
                 .build()
+            // AuthenticationStrategy
+//            ProtocolSubTypeInfo.newBuilder(AuthenticationStrategy.class)
+//                    .withSubtype(DelegatedKerberosAuthenticationStrategy.class, "delegatedKerberosAuth")
+//                .build()
         ));
     }
 }

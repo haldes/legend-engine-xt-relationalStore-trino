@@ -22,7 +22,7 @@ public class TrinoDatasourceSpecification
     //public TrinoSSLInfo ssl;
 
     public String trustStorePathVaultReference;
-    public String tustStorePasswordVaultReference;
+    public String trustStorePasswordVaultReference;
 
 
     public String clientTags;
