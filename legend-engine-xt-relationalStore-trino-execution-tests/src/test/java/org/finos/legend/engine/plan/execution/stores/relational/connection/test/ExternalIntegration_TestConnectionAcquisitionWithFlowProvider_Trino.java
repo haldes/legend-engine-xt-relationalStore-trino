@@ -14,12 +14,12 @@
 
 package org.finos.legend.engine.plan.execution.stores.relational.connection.test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.eclipse.collections.api.list.MutableList;
 import org.finos.legend.engine.authentication.TrinoTestDatabaseAuthenticationFlowProvider;
 import org.finos.legend.engine.authentication.TrinoTestDatabaseAuthenticationFlowProviderConfiguration;
 import org.finos.legend.engine.plan.execution.stores.relational.config.TemporaryTestDbConfiguration;
 import org.finos.legend.engine.plan.execution.stores.relational.connection.manager.ConnectionManagerSelector;
+import org.finos.legend.engine.plan.execution.stores.relational.connection.tests.api.dynamicTestConnections.TrinoTestContainers;
 import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.relational.connection.RelationalDatabaseConnection;
 import org.finos.legend.engine.shared.core.vault.EnvironmentVaultImplementation;
 import org.finos.legend.engine.shared.core.vault.Vault;
@@ -33,35 +33,53 @@ import java.sql.Connection;
 import java.util.Collections;
 import java.util.Optional;
 
-public class ExternalIntegration_TestConnectionAcquisitionWithFlowProvider_Trino extends RelationalConnectionTest
+public class ExternalIntegration_TestConnectionAcquisitionWithFlowProvider_Trino
+        extends RelationalConnectionTest
 {
     private ConnectionManagerSelector connectionManagerSelector;
+    private TrinoTestContainers trinoTestContainers;
 
     @BeforeClass
     public static void setupTest()
     {
         Vault.INSTANCE.registerImplementation(new EnvironmentVaultImplementation());
     }
-    
+
     @Before
-    public void setup() throws IOException
+    public void setup()
+            throws IOException
     {
+        startTrinoContainer();
         TrinoTestDatabaseAuthenticationFlowProviderConfiguration flowProviderConfiguration = null;
         TrinoTestDatabaseAuthenticationFlowProvider flowProvider = new TrinoTestDatabaseAuthenticationFlowProvider();
-        flowProvider.configure(flowProviderConfiguration);
+        flowProvider.configure(new TrinoTestDatabaseAuthenticationFlowProviderConfiguration());
         this.connectionManagerSelector = new ConnectionManagerSelector(new TemporaryTestDbConfiguration(-1), Collections.emptyList(), Optional.of(flowProvider));
     }
-    
-    @Test
-    public void testConnectivity() throws Exception
+
+    private void startTrinoContainer()
     {
-        RelationalDatabaseConnection systemUnderTest = this.getTestConnection();
-        Connection connection = this.connectionManagerSelector.getDatabaseConnection((MutableList<CommonProfile>) null, systemUnderTest);
-        testConnection(connection, 1, "select 1");
+        try {
+            this.trinoTestContainers = new TrinoTestContainers();
+            this.trinoTestContainers.setup();
+        }
+        catch (Throwable ex) {
+            //assumeTrue("Cannot start TrinoContainer", false);
+        }
     }
 
-    private RelationalDatabaseConnection getTestConnection() throws JsonProcessingException
+    @Test
+    public void testTrinoWithDelegatedKerberosConnection()
+            throws Exception
+    {
+        RelationalDatabaseConnection systemUnderTest = this.trinoTestContainers.getConnection();//this.getTestConnection();
+        Connection connection = this.connectionManagerSelector.getDatabaseConnection((MutableList<CommonProfile>) null, systemUnderTest);
+        System.out.println("haldes ============ 1");
+        testConnection(connection, 1, "select 1");
+        System.out.println("haldes ============ 2");
+    }
+
+/*    private RelationalDatabaseConnection getTestConnection() throws JsonProcessingException
     {
         return getRelationalConnectionByElement(readRelationalConnections(getResourceAsString("/org/finos/legend/engine/server/test/trinoRelationalDatabaseConnections.json")), "firstConn");
-    }
+    }*/
 }

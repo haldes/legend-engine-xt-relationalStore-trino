@@ -21,16 +21,20 @@ import org.finos.legend.engine.plan.execution.stores.relational.connection.Conne
 import org.finos.legend.engine.plan.execution.stores.relational.connection.authentication.AuthenticationStrategy;
 import org.finos.legend.engine.plan.execution.stores.relational.connection.authentication.strategy.OAuthProfile;
 import org.finos.legend.engine.plan.execution.stores.relational.connection.authentication.strategy.keys.AuthenticationStrategyKey;
+import org.finos.legend.engine.plan.execution.stores.relational.connection.authentication.strategy.keys.DelegatedKerberosAuthenticationStrategyKey;
 import org.finos.legend.engine.plan.execution.stores.relational.connection.driver.DatabaseManager;
 import org.finos.legend.engine.plan.execution.stores.relational.connection.driver.commands.RelationalDatabaseCommands;
 import org.finos.legend.engine.plan.execution.stores.relational.connection.driver.vendors.trino.TrinoCommands;
 import org.finos.legend.engine.plan.execution.stores.relational.connection.driver.vendors.trino.TrinoManager;
 import org.finos.legend.engine.plan.execution.stores.relational.connection.ds.DataSourceSpecification;
 import org.finos.legend.engine.plan.execution.stores.relational.connection.ds.DataSourceSpecificationKey;
+import org.finos.legend.engine.plan.execution.stores.relational.connection.ds.specifications.keys.TrinoDatasourceSpecificationKey;
 import org.finos.legend.engine.plan.execution.stores.relational.connection.manager.strategic.StrategicConnectionExtension;
 import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.relational.connection.RelationalDatabaseConnection;
 import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.relational.connection.authentication.AuthenticationStrategyVisitor;
+import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.relational.connection.authentication.DelegatedKerberosAuthenticationStrategy;
 import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.relational.connection.specification.DatasourceSpecificationVisitor;
+import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.relational.connection.specification.TrinoDatasourceSpecification;
 
 import java.util.List;
 import java.util.function.Function;
@@ -56,7 +60,14 @@ public class TrinoConnectionExtension implements RelationalConnectionExtension, 
     @Override
     public AuthenticationStrategyVisitor<AuthenticationStrategyKey> getExtraAuthenticationKeyGenerators()
     {
-        return authenticationStrategy -> null;
+        return authenticationStrategy -> {
+            if (authenticationStrategy instanceof DelegatedKerberosAuthenticationStrategy)
+            {
+                DelegatedKerberosAuthenticationStrategy delegatedKerberosAuthenticationStrategy = (DelegatedKerberosAuthenticationStrategy) authenticationStrategy;
+                return new DelegatedKerberosAuthenticationStrategyKey(((DelegatedKerberosAuthenticationStrategy) authenticationStrategy).serverPrincipal);
+            }
+            return null;
+        };
     }
 
     @Override
@@ -68,7 +79,22 @@ public class TrinoConnectionExtension implements RelationalConnectionExtension, 
     @Override
     public Function<RelationalDatabaseConnection, DatasourceSpecificationVisitor<DataSourceSpecificationKey>> getExtraDataSourceSpecificationKeyGenerators(int testDbPort)
     {
-        return connection -> datasourceSpecification -> null;
+        return connection -> datasourceSpecification ->
+        {
+            if (datasourceSpecification instanceof TrinoDatasourceSpecification)
+            {
+                TrinoDatasourceSpecification trinoDatasourceSpecification = (TrinoDatasourceSpecification) datasourceSpecification;
+                return new TrinoDatasourceSpecificationKey(
+                        trinoDatasourceSpecification.host,
+                        trinoDatasourceSpecification.port,
+                        trinoDatasourceSpecification.trustStorePathVaultReference,
+                        trinoDatasourceSpecification.tustStorePasswordVaultReference,
+                        trinoDatasourceSpecification.clientTags,
+                        trinoDatasourceSpecification.kerberosUseCanonicalHostname
+                        );
+            }
+            return null;
+        };
     }
 
     @Override
