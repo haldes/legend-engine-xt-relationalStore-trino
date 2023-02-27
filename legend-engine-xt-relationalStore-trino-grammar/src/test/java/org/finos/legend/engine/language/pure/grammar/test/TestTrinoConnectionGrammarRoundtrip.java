@@ -21,6 +21,22 @@ public class TestTrinoConnectionGrammarRoundtrip extends TestGrammarRoundtrip.Te
     @Test
     public void testConnectionGrammar()
     {
-        test("###Connection\n");
+        test("###Connection\n" +
+                "RelationalDatabaseConnection simple::TrinoConnection\n" +
+                "{\n" +
+                "  store: apps::pure::studio::relational::tests::dbInc;\n" +
+                "  type: Trino;\n" +
+                "  specification: Trino\n" +
+                "  {\n" +
+                "    host: 'host';\n" +
+                "    port: 1234;\n" +
+                "    trustStorePathVaultReference: 'abc12cde';\n" +
+                "    trustStorePasswordVaultReference: 'abc12cde';\n" +
+                "    clientTags: 'cg::vega';\n" +
+                "    kerberosUseCanonicalHostname: false;\n" +
+                "  };\n" +
+                "  auth: DelegatedKerberos;\n" +
+                "}\n");
     }
 }
+

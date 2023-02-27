@@ -81,6 +81,13 @@
                         <artifactId>legend-engine-xt-relationalStore-pure</artifactId>
                         <version>${project.version}</version>
                     </dependency>
+                    <!-- adding dependency-->
+                    <dependency>
+                        <groupId>org.finos.legend.engine</groupId>
+                        <artifactId>legend-engine-pure-platform-functions-java</artifactId>
+                        <version>${project.version}</version>
+                    </dependency>
+                    <!-- adding dependency-->
                     <dependency>
                         <groupId>org.finos.legend.pure</groupId>
                         <artifactId>legend-pure-m2-store-relational-grammar</artifactId>
@@ -131,6 +138,13 @@
                         <artifactId>legend-engine-xt-relationalStore-pure</artifactId>
                         <version>${project.version}</version>
                     </dependency>
+                    <!-- adding dependency-->
+                    <dependency>
+                        <groupId>org.finos.legend.engine</groupId>
+                        <artifactId>legend-engine-pure-platform-functions-java</artifactId>
+                        <version>${project.version}</version>
+                    </dependency>
+                    <!-- adding dependency-->
                     <dependency>
                         <groupId>org.finos.legend.pure</groupId>
                         <artifactId>legend-pure-m2-dsl-graph-grammar</artifactId>
@@ -191,6 +205,13 @@
             <groupId>org.finos.legend.engine</groupId>
             <artifactId>legend-engine-xt-relationalStore-pure</artifactId>
         </dependency>
+
+        <!-- adding dependency-->
+        <dependency>
+            <groupId>org.finos.legend.engine</groupId>
+            <artifactId>legend-engine-pure-platform-functions-java</artifactId>
+        </dependency>
+        <!-- adding dependency-->
 
         <dependency>
             <groupId>org.eclipse.collections</groupId>

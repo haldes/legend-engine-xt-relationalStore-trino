@@ -14,10 +14,11 @@
 
 package org.finos.legend.engine.language.pure.grammar.from;
 
-import org.finos.legend.engine.language.pure.grammar.from.authentication.AuthenticationStrategySourceCode;
+import org.finos.legend.engine.language.pure.grammar.from.antlr4.connection.TrinoLexerGrammar;
+import org.finos.legend.engine.language.pure.grammar.from.antlr4.connection.TrinoParserGrammar;
 import org.finos.legend.engine.language.pure.grammar.from.datasource.DataSourceSpecificationSourceCode;
-import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.relational.connection.authentication.AuthenticationStrategy;
 import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.relational.connection.specification.DatasourceSpecification;
+import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.relational.connection.specification.TrinoDatasourceSpecification;
 
 import java.util.Collections;
 import java.util.List;
@@ -26,14 +27,42 @@ import java.util.function.Function;
 public class TrinoGrammarParserExtension implements IRelationalGrammarParserExtension
 {
     @Override
-    public List<Function<AuthenticationStrategySourceCode, AuthenticationStrategy>> getExtraAuthenticationStrategyParsers()
-    {
-        return Collections.singletonList(code -> null);
-    }
-
-    @Override
     public List<Function<DataSourceSpecificationSourceCode, DatasourceSpecification>> getExtraDataSourceSpecificationParsers()
     {
-        return Collections.singletonList(code -> null);
+        return Collections.singletonList(code ->
+        {
+            if ("Trino".equals(code.getType()))
+            {
+                return IRelationalGrammarParserExtension.parse(code, TrinoLexerGrammar::new, TrinoParserGrammar::new,
+                        p -> visitTrinoDsp(code, p.trinoDatasourceSpecification()));
+            }
+            return null;
+        });
+    }
+
+    private TrinoDatasourceSpecification visitTrinoDsp(DataSourceSpecificationSourceCode code, TrinoParserGrammar.TrinoDatasourceSpecificationContext dbSpecCtx)
+    {
+        TrinoDatasourceSpecification dsSpec = new TrinoDatasourceSpecification();
+        dsSpec.sourceInformation = code.getSourceInformation();
+        // host
+        TrinoParserGrammar.TrinoHostContext hostCtx = PureGrammarParserUtility.validateAndExtractRequiredField(dbSpecCtx.trinoHost(), "host", dsSpec.sourceInformation);
+        dsSpec.host = PureGrammarParserUtility.fromGrammarString(hostCtx.STRING().getText(), true);
+        // port
+        TrinoParserGrammar.TrinoPortContext portCtx = PureGrammarParserUtility.validateAndExtractRequiredField(dbSpecCtx.trinoPort(), "port", dsSpec.sourceInformation);
+        dsSpec.port = Integer.parseInt(portCtx.INTEGER().getText());
+        // database name
+        TrinoParserGrammar.TrinoTrustStorePathVaultReferenceContext pathVaultCtx = PureGrammarParserUtility.validateAndExtractRequiredField(dbSpecCtx.trinoTrustStorePathVaultReference(), "trustStorePathVaultReference", dsSpec.sourceInformation);
+        dsSpec.trustStorePathVaultReference = PureGrammarParserUtility.fromGrammarString(pathVaultCtx.STRING().getText(), true);
+
+        TrinoParserGrammar.TrinoTrustStorePasswordVaultReferenceContext passwordCtx = PureGrammarParserUtility.validateAndExtractRequiredField(dbSpecCtx.trinoTrustStorePasswordVaultReference(), "trustStorePasswordVaultReference", dsSpec.sourceInformation);
+        dsSpec.trustStorePasswordVaultReference = PureGrammarParserUtility.fromGrammarString(passwordCtx.STRING().getText(), true);
+
+        TrinoParserGrammar.TrinoClientTagsContext ClientTagCtx = PureGrammarParserUtility.validateAndExtractRequiredField(dbSpecCtx.trinoClientTags(), "clientTags", dsSpec.sourceInformation);
+        dsSpec.clientTags = PureGrammarParserUtility.fromGrammarString(ClientTagCtx.STRING().getText(), true);
+
+        TrinoParserGrammar.TrinoKerberosUseCanonicalHostnameContext cnhCtx = PureGrammarParserUtility.validateAndExtractRequiredField(dbSpecCtx.trinoKerberosUseCanonicalHostname(), "kerberosUseCanonicalHostname", dsSpec.sourceInformation);
+        dsSpec.kerberosUseCanonicalHostname = Boolean.parseBoolean(PureGrammarParserUtility.fromGrammarString(cnhCtx.BOOLEAN().getText(), true));
+
+        return dsSpec;
     }
 }
