@@ -60,7 +60,8 @@ public class TrinoConnectionExtension implements RelationalConnectionExtension, 
     @Override
     public AuthenticationStrategyVisitor<AuthenticationStrategyKey> getExtraAuthenticationKeyGenerators()
     {
-        return authenticationStrategy -> {
+        return authenticationStrategy ->
+        {
             if (authenticationStrategy instanceof DelegatedKerberosAuthenticationStrategy)
             {
                 DelegatedKerberosAuthenticationStrategy delegatedKerberosAuthenticationStrategy = (DelegatedKerberosAuthenticationStrategy) authenticationStrategy;
@@ -88,7 +89,7 @@ public class TrinoConnectionExtension implements RelationalConnectionExtension, 
                         trinoDatasourceSpecification.host,
                         trinoDatasourceSpecification.port,
                         trinoDatasourceSpecification.trustStorePathVaultReference,
-                        trinoDatasourceSpecification.tustStorePasswordVaultReference,
+                        trinoDatasourceSpecification.trustStorePasswordVaultReference,
                         trinoDatasourceSpecification.clientTags,
                         trinoDatasourceSpecification.kerberosUseCanonicalHostname
                         );
