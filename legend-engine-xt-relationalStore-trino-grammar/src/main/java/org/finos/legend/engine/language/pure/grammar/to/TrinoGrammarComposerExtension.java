@@ -16,7 +16,6 @@ package org.finos.legend.engine.language.pure.grammar.to;
 
 import org.eclipse.collections.api.block.function.Function2;
 import org.eclipse.collections.impl.factory.Lists;
-import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.relational.connection.authentication.AuthenticationStrategy;
 import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.relational.connection.specification.DatasourceSpecification;
 import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.relational.connection.specification.TrinoDatasourceSpecification;
 
@@ -26,12 +25,6 @@ import static org.finos.legend.engine.language.pure.grammar.to.PureGrammarCompos
 
 public class TrinoGrammarComposerExtension implements IRelationalGrammarComposerExtension
 {
-//    @Override
-//    public List<Function2<AuthenticationStrategy, PureGrammarComposerContext, String>> getExtraAuthenticationStrategyComposers()
-//    {
-//        return Lists.mutable.with((_strategy, context) -> null);
-//    }
-
     @Override
     public List<Function2<DatasourceSpecification, PureGrammarComposerContext, String>> getExtraDataSourceSpecificationComposers()
     {

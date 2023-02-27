@@ -19,7 +19,6 @@ public class TrinoDatasourceSpecification
 {
     public String host;
     public int port;
-    //public TrinoSSLInfo ssl;
 
     public String trustStorePathVaultReference;
     public String trustStorePasswordVaultReference;

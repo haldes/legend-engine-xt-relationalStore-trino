@@ -16,9 +16,7 @@ package org.finos.legend.engine.language.pure.grammar.from;
 
 import org.finos.legend.engine.language.pure.grammar.from.antlr4.connection.TrinoLexerGrammar;
 import org.finos.legend.engine.language.pure.grammar.from.antlr4.connection.TrinoParserGrammar;
-import org.finos.legend.engine.language.pure.grammar.from.authentication.AuthenticationStrategySourceCode;
 import org.finos.legend.engine.language.pure.grammar.from.datasource.DataSourceSpecificationSourceCode;
-import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.relational.connection.authentication.AuthenticationStrategy;
 import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.relational.connection.specification.DatasourceSpecification;
 import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.relational.connection.specification.TrinoDatasourceSpecification;
 
@@ -28,13 +26,6 @@ import java.util.function.Function;
 
 public class TrinoGrammarParserExtension implements IRelationalGrammarParserExtension
 {
-
-//    @Override
-//    public List<Function<AuthenticationStrategySourceCode, AuthenticationStrategy>> getExtraAuthenticationStrategyParsers()
-//    {
-//        return Collections.singletonList(code -> null);
-//    }
-
     @Override
     public List<Function<DataSourceSpecificationSourceCode, DatasourceSpecification>> getExtraDataSourceSpecificationParsers()
     {
