@@ -22,6 +22,10 @@
         <module>legend-engine-xt-relationalStore-trino-pure</module>
     </modules>
 
+    <properties>
+        <testcontainers.version>1.17.6</testcontainers.version>
+    </properties>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
