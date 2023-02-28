@@ -80,9 +80,11 @@ public class TrinoTestContainers
         trinoDatasourceSpecification.port = this.trinoContainer.getMappedPort(8080);
         trinoDatasourceSpecification.kerberosUseCanonicalHostname = false;
         trinoDatasourceSpecification.clientTags = "cg:vega";
+        //trinoDatasourceSpecification.trustStorePathVaultReference = "some/vault/path";
+        //trinoDatasourceSpecification.trustStorePasswordVaultReference = "some_vault_password";
 
         DelegatedKerberosAuthenticationStrategy authSpec = new DelegatedKerberosAuthenticationStrategy();
-        authSpec.serverPrincipal = "abc";
+        authSpec.serverPrincipal = "ase/NYGSDEVD005@GS.COM";
 
         RelationalDatabaseConnection conn = new RelationalDatabaseConnection(trinoDatasourceSpecification, authSpec, DatabaseType.Trino);
         conn.type = DatabaseType.Trino;         // for compatibility with legacy DatabaseConnection

@@ -28,6 +28,7 @@ import org.finos.legend.engine.plan.execution.stores.relational.connection.drive
 import org.finos.legend.engine.plan.execution.stores.relational.connection.driver.vendors.trino.TrinoManager;
 import org.finos.legend.engine.plan.execution.stores.relational.connection.ds.DataSourceSpecification;
 import org.finos.legend.engine.plan.execution.stores.relational.connection.ds.DataSourceSpecificationKey;
+import org.finos.legend.engine.plan.execution.stores.relational.connection.ds.specifications.TrinoDatasourceSpecificationRuntime;
 import org.finos.legend.engine.plan.execution.stores.relational.connection.ds.specifications.keys.TrinoDatasourceSpecificationKey;
 import org.finos.legend.engine.plan.execution.stores.relational.connection.manager.strategic.StrategicConnectionExtension;
 import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.relational.connection.RelationalDatabaseConnection;
@@ -37,6 +38,7 @@ import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.r
 import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.relational.connection.specification.TrinoDatasourceSpecification;
 
 import java.util.List;
+import java.util.Properties;
 import java.util.function.Function;
 
 public class TrinoConnectionExtension implements RelationalConnectionExtension, StrategicConnectionExtension
@@ -92,7 +94,7 @@ public class TrinoConnectionExtension implements RelationalConnectionExtension, 
                         trinoDatasourceSpecification.trustStorePasswordVaultReference,
                         trinoDatasourceSpecification.clientTags,
                         trinoDatasourceSpecification.kerberosUseCanonicalHostname
-                        );
+                );
             }
             return null;
         };
@@ -101,6 +103,18 @@ public class TrinoConnectionExtension implements RelationalConnectionExtension, 
     @Override
     public Function2<RelationalDatabaseConnection, ConnectionKey, DatasourceSpecificationVisitor<DataSourceSpecification>> getExtraDataSourceSpecificationTransformerGenerators(Function<RelationalDatabaseConnection, AuthenticationStrategy> authenticationStrategyProvider)
     {
-        return (connection, connectionKey) -> datasourceSpecification -> null;
+        return (connection, connectionKey) -> datasourceSpecification ->
+        {
+            if (datasourceSpecification instanceof TrinoDatasourceSpecification)
+            {
+                return new TrinoDatasourceSpecificationRuntime(
+                        (TrinoDatasourceSpecificationKey) connectionKey.getDataSourceSpecificationKey(),
+                        new TrinoManager(),
+                        authenticationStrategyProvider.apply(connection),
+                        new Properties()
+                );
+            }
+            return null;
+        };
     }
 }

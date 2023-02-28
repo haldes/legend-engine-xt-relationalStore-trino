@@ -18,11 +18,15 @@ import org.finos.legend.engine.plan.execution.stores.relational.connection.authe
 import org.finos.legend.engine.plan.execution.stores.relational.connection.driver.DatabaseManager;
 import org.finos.legend.engine.plan.execution.stores.relational.connection.ds.specifications.keys.TrinoDatasourceSpecificationKey;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 
 public class TrinoDatasourceSpecificationRuntime extends org.finos.legend.engine.plan.execution.stores.relational.connection.ds.DataSourceSpecification
 {
+    private static final String USER = "user";
     private static final String SSL = "SSL";
     private static final String KERBEROES_REMOTE_SERVICE_NAME = "KerberosRemoteServiceName";
     private static final String SSL_TRUST_STORE_PATH = "SSLTrustStorePath";
@@ -31,14 +35,16 @@ public class TrinoDatasourceSpecificationRuntime extends org.finos.legend.engine
     private static final String KERBEROS_USE_CANONICAL_HOSTNAME = "KerberosUseCanonicalHostname";
     private final TrinoDatasourceSpecificationKey key;
 
-    protected TrinoDatasourceSpecificationRuntime(TrinoDatasourceSpecificationKey key, DatabaseManager databaseManager, AuthenticationStrategy authenticationStrategy, Properties extraUserProperties)
+    public static final List<String> propertiesForDriver = Arrays.asList(USER, SSL, KERBEROES_REMOTE_SERVICE_NAME, SSL_TRUST_STORE_PATH, SSL_TRUST_STORE_PASSWORD, CLIENT_TAGS, KERBEROS_USE_CANONICAL_HOSTNAME);
+
+    public TrinoDatasourceSpecificationRuntime(TrinoDatasourceSpecificationKey key, DatabaseManager databaseManager, AuthenticationStrategy authenticationStrategy, Properties extraUserProperties)
     {
         super(key, databaseManager, authenticationStrategy, extraUserProperties);
         this.key = key;
         this.extraDatasourceProperties.putAll(getProperties());
     }
 
-    protected TrinoDatasourceSpecificationRuntime(TrinoDatasourceSpecificationKey key, DatabaseManager databaseManager, AuthenticationStrategy authenticationStrategy, Properties extraUserProperties, int maxPoolSize, int minPoolSize)
+    public TrinoDatasourceSpecificationRuntime(TrinoDatasourceSpecificationKey key, DatabaseManager databaseManager, AuthenticationStrategy authenticationStrategy, Properties extraUserProperties, int maxPoolSize, int minPoolSize)
     {
         super(key, databaseManager, authenticationStrategy, extraUserProperties, maxPoolSize, minPoolSize);
         this.key = key;
@@ -48,13 +54,14 @@ public class TrinoDatasourceSpecificationRuntime extends org.finos.legend.engine
     private Properties getProperties()
     {
         Properties properties = new Properties();
-        properties.setProperty(KERBEROES_REMOTE_SERVICE_NAME, "HTTP");
-        properties.setProperty(SSL, "true");
+        properties.put("user", "peter");
+        //properties.setProperty(KERBEROES_REMOTE_SERVICE_NAME, "HTTP");
+        //properties.setProperty(SSL, "true");
 
-        properties.setProperty(SSL_TRUST_STORE_PATH,key.getTrustStorePathVaultReference());
-        properties.setProperty(SSL_TRUST_STORE_PASSWORD, key.getTrustStorePasswordVaultReference());
+        //properties.setProperty(SSL_TRUST_STORE_PATH,key.getTrustStorePathVaultReference());
+        //properties.setProperty(SSL_TRUST_STORE_PASSWORD, key.getTrustStorePasswordVaultReference());
         properties.setProperty(CLIENT_TAGS, key.getClientTags());
-        properties.setProperty(KERBEROS_USE_CANONICAL_HOSTNAME, String.valueOf(key.getKerberosUseCanonicalHostname()));
+        //properties.setProperty(KERBEROS_USE_CANONICAL_HOSTNAME, String.valueOf(key.getKerberosUseCanonicalHostname()));
 
         return properties;
     }

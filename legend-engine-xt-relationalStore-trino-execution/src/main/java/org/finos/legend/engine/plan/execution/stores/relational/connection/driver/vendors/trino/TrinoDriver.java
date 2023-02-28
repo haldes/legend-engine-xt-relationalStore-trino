@@ -15,6 +15,10 @@
 package org.finos.legend.engine.plan.execution.stores.relational.connection.driver.vendors.trino;
 
 import org.finos.legend.engine.plan.execution.stores.relational.connection.driver.DriverWrapper;
+import org.finos.legend.engine.plan.execution.stores.relational.connection.ds.specifications.TrinoDatasourceSpecificationRuntime;
+
+import java.util.List;
+import java.util.Properties;
 
 public class TrinoDriver extends DriverWrapper
 {
@@ -24,6 +28,15 @@ public class TrinoDriver extends DriverWrapper
     protected String getClassName()
     {
         return DRIVER_CLASSNAME;
+    }
+
+    @Override
+    protected Properties handlePropertiesPriorToJDBCDriverConnection(Properties properties)
+    {
+        Properties trinoDriverProperties = new Properties();
+        List<String> propertiesForDriver = TrinoDatasourceSpecificationRuntime.propertiesForDriver;
+        properties.keySet().stream().filter(key -> propertiesForDriver.contains(key)).forEach(key -> trinoDriverProperties.put(key,properties.get(key)));
+        return trinoDriverProperties;
     }
 
 }
