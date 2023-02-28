@@ -14,12 +14,14 @@
 
 package org.finos.legend.engine.plan.execution.stores.relational.connection.driver.vendors.trino;
 
-import java.util.Properties;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.impl.factory.Lists;
 import org.finos.legend.engine.plan.execution.stores.relational.connection.authentication.AuthenticationStrategy;
 import org.finos.legend.engine.plan.execution.stores.relational.connection.driver.DatabaseManager;
 import org.finos.legend.engine.plan.execution.stores.relational.connection.driver.commands.RelationalDatabaseCommands;
+import org.finos.legend.engine.shared.core.identity.Identity;
+
+import java.util.Properties;
 
 public class TrinoManager extends DatabaseManager
 {
@@ -53,4 +55,13 @@ public class TrinoManager extends DatabaseManager
     {
         return false;
     }
+
+    @Override
+    public Properties getExtraDataSourceProperties(AuthenticationStrategy authenticationStrategy, Identity identity)
+    {
+        Properties properties =  new Properties();
+        properties.setProperty("user", identity.getName());
+        return properties;
+    }
+
 }

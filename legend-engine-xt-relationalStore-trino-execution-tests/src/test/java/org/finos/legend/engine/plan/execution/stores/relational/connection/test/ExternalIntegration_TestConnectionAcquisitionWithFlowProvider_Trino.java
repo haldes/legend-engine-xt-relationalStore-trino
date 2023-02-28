@@ -15,7 +15,6 @@
 package org.finos.legend.engine.plan.execution.stores.relational.connection.test;
 
 import org.eclipse.collections.api.factory.Sets;
-import org.eclipse.collections.api.list.MutableList;
 import org.finos.legend.engine.authentication.TrinoTestDatabaseAuthenticationFlowProvider;
 import org.finos.legend.engine.authentication.TrinoTestDatabaseAuthenticationFlowProviderConfiguration;
 import org.finos.legend.engine.plan.execution.stores.relational.config.TemporaryTestDbConfiguration;
@@ -28,9 +27,6 @@ import javax.security.auth.Subject;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.pac4j.core.profile.CommonProfile;
-
-import javax.security.auth.SubjectDomainCombiner;
 import javax.security.auth.kerberos.KerberosPrincipal;
 
 import java.io.IOException;
@@ -39,6 +35,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+
+import static org.junit.Assume.assumeTrue;
 
 public class ExternalIntegration_TestConnectionAcquisitionWithFlowProvider_Trino
         extends RelationalConnectionTest
@@ -72,7 +70,7 @@ public class ExternalIntegration_TestConnectionAcquisitionWithFlowProvider_Trino
         }
         catch (Throwable ex)
         {
-            //assumeTrue("Cannot start TrinoContainer", false);
+            assumeTrue("Cannot start TrinoContainer", false);
         }
     }
 
@@ -80,17 +78,11 @@ public class ExternalIntegration_TestConnectionAcquisitionWithFlowProvider_Trino
     public void testTrinoWithDelegatedKerberosConnection()
             throws Exception
     {
-        RelationalDatabaseConnection systemUnderTest = this.trinoTestContainers.getConnection();//this.getTestConnection();
+        RelationalDatabaseConnection systemUnderTest = this.trinoTestContainers.getConnection();
         Set<KerberosPrincipal> principals = new HashSet<>();
         principals.add(new KerberosPrincipal("peter@test.com"));
         Subject testSubject = new Subject(false, principals, Sets.fixedSize.empty(), Sets.fixedSize.empty());
         Connection connection = this.connectionManagerSelector.getDatabaseConnection(testSubject, systemUnderTest);
         testConnection(connection, 1, "select 1");
-
     }
-
-/*    private RelationalDatabaseConnection getTestConnection() throws JsonProcessingException
-    {
-        return getRelationalConnectionByElement(readRelationalConnections(getResourceAsString("/org/finos/legend/engine/server/test/trinoRelationalDatabaseConnections.json")), "firstConn");
-    }*/
 }

@@ -54,10 +54,8 @@ public class TrinoDatasourceSpecificationRuntime extends org.finos.legend.engine
     private Properties getProperties()
     {
         Properties properties = new Properties();
-        properties.put("user", "peter");
         //properties.setProperty(KERBEROES_REMOTE_SERVICE_NAME, "HTTP");
         //properties.setProperty(SSL, "true");
-
         //properties.setProperty(SSL_TRUST_STORE_PATH,key.getTrustStorePathVaultReference());
         //properties.setProperty(SSL_TRUST_STORE_PASSWORD, key.getTrustStorePasswordVaultReference());
         properties.setProperty(CLIENT_TAGS, key.getClientTags());
