@@ -75,6 +75,15 @@
         </dependency>
         <!-- TRINO CONTAINER -->
 
+        <!-- TRINO JDBC DRIVER -->
+<!--        <dependency>
+            <groupId>io.trino</groupId>
+            <artifactId>trino-jdbc</artifactId>
+            <version>393</version>
+            <scope>test</scope>
+        </dependency>-->
+        <!-- TRINO JDBC DRIVER -->
+
         <!-- JUNIT -->
         <dependency>
             <groupId>junit</groupId>
