@@ -58,11 +58,13 @@ public class ExternalIntegration_TestConnectionAcquisitionWithFlowProvider_Trino
 
     private void startTrinoContainer()
     {
-        try {
+        try
+        {
             this.trinoTestContainers = new TrinoTestContainers();
             this.trinoTestContainers.setup();
         }
-        catch (Throwable ex) {
+        catch (Throwable ex)
+        {
             //assumeTrue("Cannot start TrinoContainer", false);
         }
     }

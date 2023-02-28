@@ -35,7 +35,8 @@ public class TrinoTestDatabaseAuthenticationFlowProvider
     @Override
     public void configure(DatabaseAuthenticationFlowProviderConfiguration configuration)
     {
-        if (!(configuration instanceof TrinoTestDatabaseAuthenticationFlowProviderConfiguration)) {
+        if (!(configuration instanceof TrinoTestDatabaseAuthenticationFlowProviderConfiguration))
+        {
             String message = "Mismatch in flow provider configuration. It should be an instance of " + TrinoTestDatabaseAuthenticationFlowProviderConfiguration.class.getSimpleName();
             throw new RuntimeException(message);
         }
