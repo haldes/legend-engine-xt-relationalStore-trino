@@ -30,6 +30,7 @@ public class TrinoDatasourceSpecificationRuntime extends org.finos.legend.engine
 {
 
     private static final String CLIENT_TAGS = "clientTags";
+    private static final String CATALOG = "catalog";
     private static final String SSL = "SSL";
     private static final String SSL_TRUST_STORE_PATH = "SSLTrustStorePath";
     private static final String SSL_TRUST_STORE_PASSWORD = "SSLTrustStorePassword";
@@ -63,6 +64,11 @@ public class TrinoDatasourceSpecificationRuntime extends org.finos.legend.engine
         if (key.getClientTags() != null)
         {
             properties.setProperty(CLIENT_TAGS, key.getClientTags());
+        }
+
+        if (key.getCatalog() != null)
+        {
+            properties.setProperty(CATALOG, key.getCatalog());
         }
 
         AuthenticationStrategy authenticationStrategy = getAuthenticationStrategy();

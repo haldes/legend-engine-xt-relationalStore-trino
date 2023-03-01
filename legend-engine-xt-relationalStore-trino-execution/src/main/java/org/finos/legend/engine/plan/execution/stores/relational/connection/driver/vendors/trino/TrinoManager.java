@@ -35,7 +35,18 @@ public class TrinoManager extends DatabaseManager
     public String buildURL(String host, int port, String databaseName, Properties extraUserDataSourceProperties, AuthenticationStrategy authenticationStrategy)
     {
         String hostWithPort = host + ":" + port;
-        return "jdbc:trino://" + hostWithPort + "/";
+        StringBuilder stringBuilder = new StringBuilder();
+
+        if (extraUserDataSourceProperties.get("catalog") != null)
+        {
+            stringBuilder.append(extraUserDataSourceProperties.get("catalog"));
+            if (extraUserDataSourceProperties.get("clientTags") != null)
+            {
+                stringBuilder.append("/");
+                stringBuilder.append(extraUserDataSourceProperties.get("clientTags"));
+            }
+        }
+        return "jdbc:trino://" + hostWithPort + "/" + stringBuilder;
     }
 
     @Override

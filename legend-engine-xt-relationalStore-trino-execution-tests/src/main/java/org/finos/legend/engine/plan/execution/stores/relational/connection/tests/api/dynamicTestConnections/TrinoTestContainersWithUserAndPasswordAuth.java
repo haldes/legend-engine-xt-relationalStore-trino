@@ -79,11 +79,14 @@ public class TrinoTestContainersWithUserAndPasswordAuth
         TrinoDatasourceSpecification trinoDatasourceSpecification = new TrinoDatasourceSpecification();
         trinoDatasourceSpecification.host = this.trinoContainer.getHost();
         trinoDatasourceSpecification.port = this.trinoContainer.getMappedPort(8080);
+        trinoDatasourceSpecification.catalog = "memory";
+        trinoDatasourceSpecification.clientTags = "default";
 
         UserNamePasswordAuthenticationStrategy authSpec = new UserNamePasswordAuthenticationStrategy();
         authSpec.baseVaultReference = "trino.";
         authSpec.userNameVaultReference = "user";
         authSpec.passwordVaultReference = "password";
+
 
         RelationalDatabaseConnection conn = new RelationalDatabaseConnection(trinoDatasourceSpecification, authSpec, DatabaseType.Trino);
         conn.type = DatabaseType.Trino;         // for compatibility with legacy DatabaseConnection
