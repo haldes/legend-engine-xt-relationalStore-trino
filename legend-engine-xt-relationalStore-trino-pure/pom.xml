@@ -213,6 +213,13 @@
         </dependency>
         <!-- adding dependency-->
 
+        <!-- adding dependency-->
+        <dependency>
+            <groupId>org.finos.legend.engine</groupId>
+            <artifactId>legend-engine-pure-platform-store-relational-java</artifactId>
+        </dependency>
+        <!-- adding dependency-->
+
         <dependency>
             <groupId>org.eclipse.collections</groupId>
             <artifactId>eclipse-collections</artifactId>

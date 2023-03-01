@@ -31,6 +31,12 @@ function <<access.private>> meta::relational::functions::sqlQueryToString::trino
    );
 }
 
+function <<access.private>> meta::relational::functions::sqlQueryToString::trino::processIdentifierForTrino(identifier:String[1], dbConfig: DbConfig[1]):String[1]
+{
+   assert($identifier->matches('[a-zA-Z0-9_"]*'), '[unsupported-api] special chars are not supported in table/column names');
+   $identifier->processIdentifierWithQuoteChar('"', $dbConfig);
+}
+
 function <<access.private>> meta::relational::functions::sqlQueryToString::trino::getLiteralProcessorsForTrino():Map<Type,LiteralProcessor>[1]
 {
    newMap([
@@ -96,7 +102,7 @@ function <<access.private>> meta::relational::functions::sqlQueryToString::trino
 function <<access.private>> meta::relational::functions::sqlQueryToString::trino::translateCreateSchemaStatementForTrino(createSchemaSQL:CreateSchemaSQL[1]) : String[*]
 {
    // sql is enclosed in [] to signify that its failure due to schema already existing should not stop us from running other DDL commands
-   if($createSchemaSQL.schema.name == 'default', |[], |'[Create Schema ' + $createSchemaSQL.schema.name + ';]');
+   if($createSchemaSQL.schema.name == 'default', |[], |'[Create Schema ' + $createSchemaSQL.schema.name + ']');
 }
 
 function <<access.private>> meta::relational::functions::sqlQueryToString::trino::translateDropSchemaStatementForTrino(dropSchemaSQL:DropSchemaSQL[1]) : String[*]
@@ -108,7 +114,7 @@ function <<access.private>> meta::relational::functions::sqlQueryToString::trino
 function <<access.private>> meta::relational::functions::sqlQueryToString::trino::translateDropTableStatementForTrino(dropTableSQL:DropTableSQL[1]) : String[*]
 {
   let t = $dropTableSQL.table;
-  'Drop table if exists '+if($t.schema.name == 'default',|'',|$t.schema.name+'.')+$t.name+';';
+  'Drop table if exists '+if($t.schema.name == 'default',|'',|$t.schema.name+'.')+$t.name;
 }
 
 function <<access.private>> meta::relational::functions::sqlQueryToString::trino::translateCreateTableStatementForTrino(createTableSQL:CreateTableSQL[1], dbConfig:DbConfig[1]) : String[*]
@@ -118,16 +124,16 @@ function <<access.private>> meta::relational::functions::sqlQueryToString::trino
   'Create Table '+if($t.schema.name == 'default',|'',|$t.schema.name+'.')+$t.name+
       + '('
       + $t.columns->cast(@meta::relational::metamodel::Column)
-         ->map(c | $c.name->processColumnName($dbConfig) + ' ' +  getColumnTypeSqlTextForTrino($c.type) + if($c.nullable->isEmpty() || $applyConstraints == false, | '', | if($c.nullable == true , | ' NULL', | ' NOT NULL' )))
+        ->map(c | $c.name->processColumnName($dbConfig) + ' ' +  getColumnTypeSqlTextForTrino($c.type) )
         ->joinStrings(',')
-      + if ($t.primaryKey->isEmpty() || $applyConstraints == false, | '', | ', PRIMARY KEY(' + $t.primaryKey->map(c | $c.name)->joinStrings(',') + ')')
-      +');';
+      +')';
 }
 
 function <<access.private>> meta::relational::functions::sqlQueryToString::trino::getColumnTypeSqlTextForTrino(columnType:meta::relational::metamodel::datatype::DataType[1]):String[1]
 {
    $columnType->match([
-      s : meta::relational::metamodel::datatype::Timestamp[1] | 'datetime',
+      s : meta::relational::metamodel::datatype::Timestamp[1] | 'TIMESTAMP',
+      f : meta::relational::metamodel::datatype::Float[1] | 'DOUBLE',
       a : Any[*] | meta::relational::metamodel::datatype::dataTypeToSqlText($columnType)
    ])
 }
@@ -139,5 +145,5 @@ function <<access.private>> meta::relational::functions::sqlQueryToString::trino
         + ') values '
         + $loadTableSQL.parsedData.values->map(row | '('
             + $row.values->meta::relational::functions::database::testDataSQLgeneration::convertValuesToCsv($loadTableSQL.columnsToLoad.type)
-            + ')')->makeString(',') + ';';
+            + ')')->makeString(',') ;
 }
