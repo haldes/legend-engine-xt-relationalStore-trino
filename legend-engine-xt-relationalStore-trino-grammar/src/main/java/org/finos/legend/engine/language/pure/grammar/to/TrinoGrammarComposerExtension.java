@@ -38,9 +38,12 @@ public class TrinoGrammarComposerExtension implements IRelationalGrammarComposer
                         context.getIndentationString() + getTabString(baseIndentation) + "{\n" +
                         context.getIndentationString() + getTabString(baseIndentation + 1) + "host: " + PureGrammarComposerUtility.convertString(spec.host,true) + ";\n" +
                         context.getIndentationString() + getTabString(baseIndentation + 1) + "port: " + spec.port + ";\n" +
+                        context.getIndentationString() + getTabString(baseIndentation + 1) + "catalog: " + PureGrammarComposerUtility.convertString(spec.catalog,true) + ";\n" +
+                        context.getIndentationString() + getTabString(baseIndentation + 1) + "clientTags: " + PureGrammarComposerUtility.convertString(spec.clientTags,true) + ";\n" +
+                        context.getIndentationString() + getTabString(baseIndentation + 1) + "ssl: " + spec.ssl + ";\n" +
                         context.getIndentationString() + getTabString(baseIndentation + 1) + "trustStorePathVaultReference: " + PureGrammarComposerUtility.convertString(spec.trustStorePathVaultReference,true) + ";\n" +
                         context.getIndentationString() + getTabString(baseIndentation + 1) + "trustStorePasswordVaultReference: " + PureGrammarComposerUtility.convertString(spec.trustStorePasswordVaultReference,true) + ";\n" +
-                        context.getIndentationString() + getTabString(baseIndentation + 1) + "clientTags: " + PureGrammarComposerUtility.convertString(spec.clientTags,true) + ";\n" +
+                        context.getIndentationString() + getTabString(baseIndentation + 1) + "kerberosRemoteServiceName: " + PureGrammarComposerUtility.convertString(spec.kerberosRemoteServiceName,true) + ";\n" +
                         context.getIndentationString() + getTabString(baseIndentation + 1) + "kerberosUseCanonicalHostname: " + spec.kerberosUseCanonicalHostname + ";\n" +
                         context.getIndentationString() + getTabString(baseIndentation) + "}";
             }

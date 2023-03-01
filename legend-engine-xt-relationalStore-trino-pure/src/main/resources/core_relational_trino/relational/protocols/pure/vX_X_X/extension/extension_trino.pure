@@ -25,9 +25,12 @@ meta::protocols::pure::vX_X_X::transformation::fromPureGraph::connection::trinoS
                         _type = 'Trino',
                         host = $s.host,
                         port = $s.port,
+                        catalog = $s.catalog,
+                        clientTags = $s.clientTags,
+                        ssl = $s.ssl,
                         trustStorePathVaultReference = $s.trustStorePathVaultReference,
                         trustStorePasswordVaultReference = $s.trustStorePasswordVaultReference,
-                        clientTags = $s.clientTags,
+                        kerberosRemoteServiceName = $s.kerberosRemoteServiceName,
                         kerberosUseCanonicalHostname = $s.kerberosUseCanonicalHostname
                      )
     ],
@@ -41,9 +44,12 @@ meta::protocols::pure::vX_X_X::transformation::fromPureGraph::connection::trinoS
                      ^meta::pure::alloy::connections::alloy::specification::TrinoDatasourceSpecification(
                         host = $s.host,
                         port = $s.port,
+                        catalog = $s.catalog,
+                        clientTags = $s.clientTags,
+                        ssl = $s.ssl,
                         trustStorePathVaultReference = $s.trustStorePathVaultReference,
                         trustStorePasswordVaultReference = $s.trustStorePasswordVaultReference,
-                        clientTags = $s.clientTags,
+                        kerberosRemoteServiceName = $s.kerberosRemoteServiceName,
                         kerberosUseCanonicalHostname = $s.kerberosUseCanonicalHostname
                      )
     ]

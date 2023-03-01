@@ -15,6 +15,8 @@
 package org.finos.legend.engine.plan.execution.stores.relational.connection.ds.specifications;
 
 import org.finos.legend.engine.plan.execution.stores.relational.connection.authentication.AuthenticationStrategy;
+import org.finos.legend.engine.plan.execution.stores.relational.connection.authentication.strategy.DelegatedKerberosAuthenticationStrategy;
+import org.finos.legend.engine.plan.execution.stores.relational.connection.authentication.strategy.UserNamePasswordAuthenticationStrategy;
 import org.finos.legend.engine.plan.execution.stores.relational.connection.driver.DatabaseManager;
 import org.finos.legend.engine.plan.execution.stores.relational.connection.ds.specifications.keys.TrinoDatasourceSpecificationKey;
 
@@ -26,16 +28,19 @@ import java.util.Properties;
 
 public class TrinoDatasourceSpecificationRuntime extends org.finos.legend.engine.plan.execution.stores.relational.connection.ds.DataSourceSpecification
 {
-    private static final String USER = "user";
+
+    private static final String CLIENT_TAGS = "clientTags";
     private static final String SSL = "SSL";
-    private static final String KERBEROES_REMOTE_SERVICE_NAME = "KerberosRemoteServiceName";
     private static final String SSL_TRUST_STORE_PATH = "SSLTrustStorePath";
     private static final String SSL_TRUST_STORE_PASSWORD = "SSLTrustStorePassword";
-    private static final String CLIENT_TAGS = "clientTags";
+    private static final String KERBEROES_REMOTE_SERVICE_NAME = "KerberosRemoteServiceName";
     private static final String KERBEROS_USE_CANONICAL_HOSTNAME = "KerberosUseCanonicalHostname";
+
+    private static final String USER = "user";
+    private static final String PASSWORD = "password";
     private final TrinoDatasourceSpecificationKey key;
 
-    public static final List<String> propertiesForDriver = Arrays.asList(USER, SSL, KERBEROES_REMOTE_SERVICE_NAME, SSL_TRUST_STORE_PATH, SSL_TRUST_STORE_PASSWORD, CLIENT_TAGS, KERBEROS_USE_CANONICAL_HOSTNAME);
+    public static final List<String> propertiesForDriver = Arrays.asList(CLIENT_TAGS, SSL, SSL_TRUST_STORE_PATH, SSL_TRUST_STORE_PASSWORD, KERBEROES_REMOTE_SERVICE_NAME, KERBEROS_USE_CANONICAL_HOSTNAME, USER, PASSWORD);
 
     public TrinoDatasourceSpecificationRuntime(TrinoDatasourceSpecificationKey key, DatabaseManager databaseManager, AuthenticationStrategy authenticationStrategy, Properties extraUserProperties)
     {
@@ -54,11 +59,40 @@ public class TrinoDatasourceSpecificationRuntime extends org.finos.legend.engine
     private Properties getProperties()
     {
         Properties properties = new Properties();
+
+        if (key.getClientTags() != null)
+        {
+            properties.setProperty(CLIENT_TAGS, key.getClientTags());
+        }
+
+        AuthenticationStrategy authenticationStrategy = getAuthenticationStrategy();
+        if (authenticationStrategy instanceof UserNamePasswordAuthenticationStrategy)
+        {
+            properties.setProperty(SSL, String.valueOf(key.isSsl()));
+        }
+
+        if (authenticationStrategy instanceof DelegatedKerberosAuthenticationStrategy)
+        {
+            properties.setProperty(SSL, "true");
+
+            if (key.getTrustStorePathVaultReference() != null)
+            {
+                properties.setProperty(SSL_TRUST_STORE_PATH,key.getTrustStorePathVaultReference());
+            }
+
+            if (key.getTrustStorePasswordVaultReference() != null)
+            {
+                properties.setProperty(SSL_TRUST_STORE_PASSWORD, key.getTrustStorePasswordVaultReference());
+            }
+
+            properties.setProperty(KERBEROS_USE_CANONICAL_HOSTNAME, String.valueOf(key.isKerberosUseCanonicalHostname()));
+        }
+
         //properties.setProperty(KERBEROES_REMOTE_SERVICE_NAME, "HTTP");
         //properties.setProperty(SSL, "true");
         //properties.setProperty(SSL_TRUST_STORE_PATH,key.getTrustStorePathVaultReference());
         //properties.setProperty(SSL_TRUST_STORE_PASSWORD, key.getTrustStorePasswordVaultReference());
-        properties.setProperty(CLIENT_TAGS, key.getClientTags());
+        //properties.setProperty(CLIENT_TAGS, key.getClientTags());
         //properties.setProperty(KERBEROS_USE_CANONICAL_HOSTNAME, String.valueOf(key.getKerberosUseCanonicalHostname()));
 
         return properties;

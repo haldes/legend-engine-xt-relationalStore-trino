@@ -45,10 +45,13 @@ public class TrinoCompilerExtension implements IRelationalCompilerExtension
                 return new Root_meta_pure_alloy_connections_alloy_specification_TrinoDatasourceSpecification_Impl("", null, context.pureModel.getClass("meta::pure::alloy::connections::alloy::specification::TrinoDatasourceSpecification"))
                         ._host(trinoDatasourceSpecification.host)
                         ._port(trinoDatasourceSpecification.port)
+                        ._catalog(trinoDatasourceSpecification.catalog)
                         ._clientTags(trinoDatasourceSpecification.clientTags)
-                        ._kerberosUseCanonicalHostname(trinoDatasourceSpecification.kerberosUseCanonicalHostname)
+                        ._ssl(trinoDatasourceSpecification.ssl)
                         ._trustStorePathVaultReference(trinoDatasourceSpecification.trustStorePathVaultReference)
                         ._trustStorePasswordVaultReference(trinoDatasourceSpecification.trustStorePasswordVaultReference)
+                        ._kerberosRemoteServiceName(trinoDatasourceSpecification.kerberosRemoteServiceName)
+                        ._kerberosUseCanonicalHostname(trinoDatasourceSpecification.kerberosUseCanonicalHostname)
                         ;
             }
             return null;

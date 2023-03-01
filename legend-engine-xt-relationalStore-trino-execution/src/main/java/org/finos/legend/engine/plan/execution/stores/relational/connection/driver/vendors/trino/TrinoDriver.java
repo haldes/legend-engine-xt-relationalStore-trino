@@ -36,6 +36,11 @@ public class TrinoDriver extends DriverWrapper
         Properties trinoDriverProperties = new Properties();
         List<String> propertiesForDriver = TrinoDatasourceSpecificationRuntime.propertiesForDriver;
         properties.keySet().stream().filter(key -> propertiesForDriver.contains(key)).forEach(key -> trinoDriverProperties.put(key,properties.get(key)));
+        if (!Boolean.parseBoolean(properties.getProperty("SSL")))
+        {
+            trinoDriverProperties.remove("password");
+        }
+
         return trinoDriverProperties;
     }
 

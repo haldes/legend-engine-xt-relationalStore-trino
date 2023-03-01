@@ -17,6 +17,7 @@ package org.finos.legend.engine.authentication;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.impl.factory.Lists;
 import org.finos.legend.engine.authentication.flows.TrinoWithDelegatedKerberosFlow;
+import org.finos.legend.engine.authentication.flows.TrinoWithUserPasswordFlow;
 import org.finos.legend.engine.authentication.provider.AbstractDatabaseAuthenticationFlowProvider;
 import org.finos.legend.engine.authentication.provider.DatabaseAuthenticationFlowProviderConfiguration;
 import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.relational.connection.authentication.AuthenticationStrategy;
@@ -28,7 +29,8 @@ public class TrinoTestDatabaseAuthenticationFlowProvider
     private ImmutableList<DatabaseAuthenticationFlow<? extends DatasourceSpecification, ? extends AuthenticationStrategy>> flows(TrinoTestDatabaseAuthenticationFlowProviderConfiguration configuration)
     {
         return Lists.immutable.of(
-                new TrinoWithDelegatedKerberosFlow()
+                new TrinoWithDelegatedKerberosFlow(),
+                new TrinoWithUserPasswordFlow()
         );
     }
 

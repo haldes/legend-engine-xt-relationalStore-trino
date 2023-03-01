@@ -19,13 +19,22 @@ public class TrinoDatasourceSpecification
 {
     public String host;
     public int port;
+    public String catalog;
+    public String clientTags;
 
+    /**
+     *  SSL level properties
+     */
+    public boolean ssl;
     public String trustStorePathVaultReference;
     public String trustStorePasswordVaultReference;
 
-
-    public String clientTags;
+    /**
+     * Kerberos Auth related Properties
+     */
+    public String kerberosRemoteServiceName;
     public boolean kerberosUseCanonicalHostname;
+
 
     @Override
     public <T> T accept(DatasourceSpecificationVisitor<T> datasourceSpecificationVisitor)

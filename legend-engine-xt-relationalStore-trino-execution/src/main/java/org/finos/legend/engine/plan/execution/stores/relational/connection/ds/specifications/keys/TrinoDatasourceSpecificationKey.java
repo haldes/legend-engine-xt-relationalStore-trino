@@ -23,20 +23,21 @@ public class TrinoDatasourceSpecificationKey
 {
     public String host;
     public int port;
+    public String catalog;
+    public String clientTags;
+
+    /**
+     *  SSL level properties
+     */
+    public boolean ssl;
     public String trustStorePathVaultReference;
     public String trustStorePasswordVaultReference;
-    public String clientTags;
-    public boolean kerberosUseCanonicalHostname;
 
-    public TrinoDatasourceSpecificationKey(String host, int port, String trustStorePathVaultReference, String trustStorePasswordVaultReference, String clientTags, boolean kerberosUseCanonicalHostname)
-    {
-        this.host = host;
-        this.port = port;
-        this.trustStorePathVaultReference = trustStorePathVaultReference;
-        this.trustStorePasswordVaultReference = trustStorePasswordVaultReference;
-        this.clientTags = clientTags;
-        this.kerberosUseCanonicalHostname = kerberosUseCanonicalHostname;
-    }
+    /**
+     * Kerberos Auth related Properties
+     */
+    public String kerberosRemoteServiceName;
+    public boolean kerberosUseCanonicalHostname;
 
     @Override
     public String shortId()
@@ -50,47 +51,17 @@ public class TrinoDatasourceSpecificationKey
                 ", kerberosUseCanonicalHostname:" + kerberosUseCanonicalHostname;
     }
 
-    public String getHost()
+    public TrinoDatasourceSpecificationKey(String host, int port, String catalog, String clientTags, boolean ssl, String trustStorePathVaultReference, String trustStorePasswordVaultReference, String kerberosRemoteServiceName, boolean kerberosUseCanonicalHostname)
     {
-        return host;
-    }
-
-    public int getPort()
-    {
-        return port;
-    }
-
-    public String getTrustStorePathVaultReference()
-    {
-        return trustStorePathVaultReference;
-    }
-
-    public String getTrustStorePasswordVaultReference()
-    {
-        return trustStorePasswordVaultReference;
-    }
-
-    public String getClientTags()
-    {
-        return clientTags;
-    }
-
-    public boolean getKerberosUseCanonicalHostname()
-    {
-        return kerberosUseCanonicalHostname;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "TrinoDatasourceSpecificationKey{" +
-                "host='" + host + '\'' +
-                ", port=" + port +
-                ", trustStorePathVaultReference='" + trustStorePathVaultReference + '\'' +
-                ", trustStorePasswordVaultReference='" + trustStorePasswordVaultReference + '\'' +
-                ", clientTags='" + clientTags + '\'' +
-                ", kerberosUseCanonicalHostname=" + kerberosUseCanonicalHostname +
-                '}';
+        this.host = host;
+        this.port = port;
+        this.catalog = catalog;
+        this.clientTags = clientTags;
+        this.ssl = ssl;
+        this.trustStorePathVaultReference = trustStorePathVaultReference;
+        this.trustStorePasswordVaultReference = trustStorePasswordVaultReference;
+        this.kerberosRemoteServiceName = kerberosRemoteServiceName;
+        this.kerberosUseCanonicalHostname = kerberosUseCanonicalHostname;
     }
 
     @Override
@@ -105,12 +76,73 @@ public class TrinoDatasourceSpecificationKey
             return false;
         }
         TrinoDatasourceSpecificationKey that = (TrinoDatasourceSpecificationKey) o;
-        return port == that.port && kerberosUseCanonicalHostname == that.kerberosUseCanonicalHostname && Objects.equals(host, that.host) && Objects.equals(trustStorePathVaultReference, that.trustStorePathVaultReference) && Objects.equals(trustStorePasswordVaultReference, that.trustStorePasswordVaultReference) && Objects.equals(clientTags, that.clientTags);
+        return port == that.port && ssl == that.ssl && kerberosUseCanonicalHostname == that.kerberosUseCanonicalHostname && host.equals(that.host) && Objects.equals(catalog, that.catalog) && Objects.equals(clientTags, that.clientTags) && Objects.equals(trustStorePathVaultReference, that.trustStorePathVaultReference) && Objects.equals(trustStorePasswordVaultReference, that.trustStorePasswordVaultReference) && Objects.equals(kerberosRemoteServiceName, that.kerberosRemoteServiceName);
+    }
+
+    @Override
+    public String toString()
+    {
+        return "TrinoDatasourceSpecificationKey{" +
+                "host='" + host + '\'' +
+                ", port=" + port +
+                ", catalog='" + catalog + '\'' +
+                ", clientTags='" + clientTags + '\'' +
+                ", ssl=" + ssl +
+                ", trustStorePathVaultReference='" + trustStorePathVaultReference + '\'' +
+                ", trustStorePasswordVaultReference='" + trustStorePasswordVaultReference + '\'' +
+                ", kerberosRemoteServiceName='" + kerberosRemoteServiceName + '\'' +
+                ", kerberosUseCanonicalHostname=" + kerberosUseCanonicalHostname +
+                '}';
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(host, port, trustStorePathVaultReference, trustStorePasswordVaultReference, clientTags, kerberosUseCanonicalHostname);
+        return Objects.hash(host, port, catalog, clientTags, ssl, trustStorePathVaultReference, trustStorePasswordVaultReference, kerberosRemoteServiceName, kerberosUseCanonicalHostname);
+    }
+
+    public String getHost()
+    {
+        return host;
+    }
+
+    public int getPort()
+    {
+        return port;
+    }
+
+    public String getCatalog()
+    {
+        return catalog;
+    }
+
+    public String getClientTags()
+    {
+        return clientTags;
+    }
+
+    public boolean isSsl()
+    {
+        return ssl;
+    }
+
+    public String getTrustStorePathVaultReference()
+    {
+        return trustStorePathVaultReference;
+    }
+
+    public String getTrustStorePasswordVaultReference()
+    {
+        return trustStorePasswordVaultReference;
+    }
+
+    public String getKerberosRemoteServiceName()
+    {
+        return kerberosRemoteServiceName;
+    }
+
+    public boolean isKerberosUseCanonicalHostname()
+    {
+        return kerberosUseCanonicalHostname;
     }
 }

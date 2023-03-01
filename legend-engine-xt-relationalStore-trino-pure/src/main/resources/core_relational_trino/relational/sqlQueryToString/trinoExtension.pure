@@ -41,6 +41,22 @@ function <<access.private>> meta::relational::functions::sqlQueryToString::trino
   let allStates = allGenerationStates();
 
   [
+    dynaFnToSql('and',                    $allStates,            ^ToSql(format='%s', transform={p:String[*]|$p->makeString(' and ')})),
+    dynaFnToSql('count',                  $allStates,            ^ToSql(format='count(%s)', transform={p:String[*]|if($p->isEmpty(),|'*',|$p)})),
+    dynaFnToSql('equal',                  $allStates,            ^ToSql(format='%s = %s')),
+    dynaFnToSql('greaterThan',            $allStates,            ^ToSql(format='%s > %s')),
+    dynaFnToSql('greaterThanEqual',       $allStates,            ^ToSql(format='%s >= %s')),
+    dynaFnToSql('if',                     $allStates,            ^ToSql(format='case when %s then %s else %s end', parametersWithinWhenClause = [true, false, false])),
+    dynaFnToSql('in',                     $allStates,            ^ToSql(format='%s in %s', transform={p:String[2] | if($p->at(1)->startsWith('(') && $p->at(1)->endsWith(')'), | $p, | [$p->at(0), ('(' + $p->at(1) + ')')])})),
+    dynaFnToSql('isEmpty',                $allStates,            ^ToSql(format='%s is null')),
+    dynaFnToSql('isNotEmpty',             $allStates,            ^ToSql(format='%s is not null')),
+    dynaFnToSql('isNotNull',              $allStates,            ^ToSql(format='%s is not null')),
+    dynaFnToSql('isNull',                 $allStates,            ^ToSql(format='%s is null')),
+    dynaFnToSql('lessThan',               $allStates,            ^ToSql(format='%s < %s')),
+    dynaFnToSql('lessThanEqual',          $allStates,            ^ToSql(format='%s <= %s')),
+    dynaFnToSql('notEqual',               $allStates,            ^ToSql(format='%s != %s')),
+    dynaFnToSql('or',                     $allStates,            ^ToSql(format='%s', transform={p:String[*]|$p->makeString(' or ')})),
+    dynaFnToSql('sqlNull',                $allStates,            ^ToSql(format='null'))
   ];
 }
 
@@ -51,5 +67,16 @@ function <<access.private>> meta::relational::functions::sqlQueryToString::trino
 
 function <<access.private>> meta::relational::functions::sqlQueryToString::trino::processSelectSQLQueryForTrino(s:SelectSQLQuery[1], dbConfig : DbConfig[1], format:Format[1], config:Config[1], isSubSelect : Boolean[1], extensions:Extension[*]):String[1]
 {
-  fail('[unsupported-api] select queries not supported'); '';
+  // fail('[unsupported-api] select queries not supported'); '';
+  let opStr = if($s.filteringOperation->isEmpty(), |'', |$s.filteringOperation->map(s|$s->processOperation($dbConfig, $format->indent(), ^$config(callingFromFilter = true), $extensions))->filter(s|$s != '')->joinStrings(' <||> '));
+ let havingStr = if($s.havingOperation->isEmpty(), |'', |$s.havingOperation->map(s|$s->processOperation($dbConfig, $format->indent(), $config, $extensions))->filter(s|$s != '')->joinStrings(' <||> '));
+ 
+ assert($s.fromRow == [] && $s.toRow == [], '[unsupported-api] slice/limit operations are not implemented');
+ assert($s.groupBy == [] && $havingStr == '', '[unsupported-api] groupBy/having operations are not implemented');
+ 
+ $format.separator + 'select ' + processTop($s, $format) + if($s.distinct == true,|'distinct ',|'') +
+ processSelectColumns($s.columns, $dbConfig, $format->indent(), true, $extensions) +
+ if($s.data == [],|'',| ' ' + $format.separator + 'from ' + $s.data->toOne()->processJoinTreeNode([], $dbConfig, $format->indent(), [], $extensions)) +
+ if (eq($opStr, ''), |'', | ' ' + $format.separator + 'where ' + $opStr) +
+ if ($s.orderBy->isEmpty(),|'',| ' ' + $format.separator + 'order by '+ $s.orderBy->processOrderBy($dbConfig, $format->indent(), $config, $extensions)->makeString(','));
 }

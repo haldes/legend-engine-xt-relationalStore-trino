@@ -50,16 +50,27 @@ public class TrinoGrammarParserExtension implements IRelationalGrammarParserExte
         // port
         TrinoParserGrammar.TrinoPortContext portCtx = PureGrammarParserUtility.validateAndExtractRequiredField(dbSpecCtx.trinoPort(), "port", dsSpec.sourceInformation);
         dsSpec.port = Integer.parseInt(portCtx.INTEGER().getText());
-        // database name
-        TrinoParserGrammar.TrinoTrustStorePathVaultReferenceContext pathVaultCtx = PureGrammarParserUtility.validateAndExtractRequiredField(dbSpecCtx.trinoTrustStorePathVaultReference(), "trustStorePathVaultReference", dsSpec.sourceInformation);
-        dsSpec.trustStorePathVaultReference = PureGrammarParserUtility.fromGrammarString(pathVaultCtx.STRING().getText(), true);
-
-        TrinoParserGrammar.TrinoTrustStorePasswordVaultReferenceContext passwordCtx = PureGrammarParserUtility.validateAndExtractRequiredField(dbSpecCtx.trinoTrustStorePasswordVaultReference(), "trustStorePasswordVaultReference", dsSpec.sourceInformation);
-        dsSpec.trustStorePasswordVaultReference = PureGrammarParserUtility.fromGrammarString(passwordCtx.STRING().getText(), true);
-
+        // Catalog name
+        TrinoParserGrammar.TrinoCatalogContext catalogCtx = PureGrammarParserUtility.validateAndExtractRequiredField(dbSpecCtx.trinoCatalog(), "catalog", dsSpec.sourceInformation);
+        dsSpec.catalog = PureGrammarParserUtility.fromGrammarString(catalogCtx.STRING().getText(), true);
+        // clientTags
         TrinoParserGrammar.TrinoClientTagsContext ClientTagCtx = PureGrammarParserUtility.validateAndExtractRequiredField(dbSpecCtx.trinoClientTags(), "clientTags", dsSpec.sourceInformation);
         dsSpec.clientTags = PureGrammarParserUtility.fromGrammarString(ClientTagCtx.STRING().getText(), true);
 
+
+        // SSL related parameters
+        TrinoParserGrammar.TrinoSSLContext sslCtx = PureGrammarParserUtility.validateAndExtractRequiredField(dbSpecCtx.trinoSSL(), "ssl", dsSpec.sourceInformation);
+        dsSpec.ssl = Boolean.parseBoolean(PureGrammarParserUtility.fromGrammarString(sslCtx.BOOLEAN().getText(), true));
+        // trustStorePathVaultReference
+        TrinoParserGrammar.TrinoTrustStorePathVaultReferenceContext pathVaultCtx = PureGrammarParserUtility.validateAndExtractRequiredField(dbSpecCtx.trinoTrustStorePathVaultReference(), "trustStorePathVaultReference", dsSpec.sourceInformation);
+        dsSpec.trustStorePathVaultReference = PureGrammarParserUtility.fromGrammarString(pathVaultCtx.STRING().getText(), true);
+        // trustStorePasswordVaultReference
+        TrinoParserGrammar.TrinoTrustStorePasswordVaultReferenceContext passwordCtx = PureGrammarParserUtility.validateAndExtractRequiredField(dbSpecCtx.trinoTrustStorePasswordVaultReference(), "trustStorePasswordVaultReference", dsSpec.sourceInformation);
+        dsSpec.trustStorePasswordVaultReference = PureGrammarParserUtility.fromGrammarString(passwordCtx.STRING().getText(), true);
+
+        // Kerberose Related Parameters
+        TrinoParserGrammar.TrinoKerberosRemoteServiceNameContext remoteSvcNameCtx = PureGrammarParserUtility.validateAndExtractRequiredField(dbSpecCtx.trinoKerberosRemoteServiceName(), "kerberosRemoteServiceName", dsSpec.sourceInformation);
+        dsSpec.kerberosRemoteServiceName = PureGrammarParserUtility.fromGrammarString(remoteSvcNameCtx.STRING().getText(), true);
         TrinoParserGrammar.TrinoKerberosUseCanonicalHostnameContext cnhCtx = PureGrammarParserUtility.validateAndExtractRequiredField(dbSpecCtx.trinoKerberosUseCanonicalHostname(), "kerberosUseCanonicalHostname", dsSpec.sourceInformation);
         dsSpec.kerberosUseCanonicalHostname = Boolean.parseBoolean(PureGrammarParserUtility.fromGrammarString(cnhCtx.BOOLEAN().getText(), true));
 

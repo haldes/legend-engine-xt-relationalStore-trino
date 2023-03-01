@@ -29,9 +29,8 @@ public class TrinoProtocolExtension implements PureProtocolExtension
     public List<Function0<List<ProtocolSubTypeInfo<?>>>> getExtraProtocolSubTypeInfoCollectors()
     {
         return Lists.fixedSize.with(() -> Lists.fixedSize.with(
-            //DatasourceSpecification
             ProtocolSubTypeInfo.newBuilder(DatasourceSpecification.class)
-                    .withSubtype(TrinoDatasourceSpecification.class, "TrinoSpecification")
+                    .withSubtype(TrinoDatasourceSpecification.class, "Trino")
                 .build()
         ));
     }

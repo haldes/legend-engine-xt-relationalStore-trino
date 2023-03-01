@@ -30,9 +30,12 @@ public class TestTrinoConnectionGrammarRoundtrip extends TestGrammarRoundtrip.Te
                 "  {\n" +
                 "    host: 'host';\n" +
                 "    port: 1234;\n" +
+                "    catalog: 'tpch';\n" +
+                "    clientTags: 'cg::vega';\n" +
+                "    ssl: false;\n" +
                 "    trustStorePathVaultReference: 'abc12cde';\n" +
                 "    trustStorePasswordVaultReference: 'abc12cde';\n" +
-                "    clientTags: 'cg::vega';\n" +
+                "    kerberosRemoteServiceName: 'HTTP';\n" +
                 "    kerberosUseCanonicalHostname: false;\n" +
                 "  };\n" +
                 "  auth: DelegatedKerberos;\n" +

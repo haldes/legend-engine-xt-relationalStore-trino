@@ -44,5 +44,6 @@
   "staticTestConnections": {
   },
   "dynamicTestConnectionCreators": {
+    "trino" : "org.finos.legend.engine.plan.execution.stores.relational.connection.tests.api.dynamicTestConnections.TrinoTestContainersWithUserAndPasswordAuth"
   }
 }
